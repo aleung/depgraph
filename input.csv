@@ -1,0 +1,16 @@
+[items]
+id, slogan
+
+root, Develop depgraph
+1, Finish source code
+2, Test
+3, Commit to GitHub
+4, Publish to NPM
+
+[dependencies]
+from, to
+
+root, 4
+4, 3
+4, 2
+2, 1
