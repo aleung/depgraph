@@ -34,6 +34,8 @@ edge [color="blue"]
 @enddot
     `;
 
+    console.log('Generate output ...');
+
     // TODO: configurable
     const generator = plantuml.generate(dot, {format: 'svg'});
     generator.out.pipe(fs.createWriteStream("output.svg"));
@@ -49,11 +51,11 @@ const parser = csvparse({
 parser.on('error', (err: any) => {
     console.error('Unable to parse the input file. Is it in valid CSV format?');
     console.error(err);
-    exit(1);
+    process.exit(1);
 });
 
 parser.on('readable', () => {
-    let record;
+    let record: string[];
     while (record = parser.read()) {
         if (record[0].length === 0) {
             continue;

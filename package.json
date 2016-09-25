@@ -1,20 +1,32 @@
 {
   "name": "depgraph",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Generate dependency graph from CSV file",
+  "keywords": [
+    "dependency",
+    "plantuml",
+    "dot",
+    "graphviz"
+  ],
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Leo Liang",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aleung/depgraph.git"
+  },
+  "engines": {
+    "node": "^5.0.0"
+  },
   "dependencies": {
     "csv-parse": "^1.1.7",
     "node-plantuml": "^0.4.4"
   },
   "devDependencies": {
     "@types/csv-parse": "^1.1.4",
-    "@types/typescript": "^0.4.29",
     "typescript": "^2.0.3"
   }
 }
