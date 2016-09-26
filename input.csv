@@ -1,16 +1,27 @@
 [items]
-id, slogan
+id,style,slogan
 
-root, Develop depgraph
-1, Finish source code
-2, Test
-3, Commit to GitHub
-4, Publish to NPM
+root,,Develop depgraph
+1,,Finish source code
+2,,Test
+3,,Commit to GitHub
+4,,Publish to NPM
 
 [dependencies]
-from, to
+from, to, style
 
 root, 4
 4, 3
 4, 2
 2, 1
+
+[node-styles],,See http://www.graphviz.org/content/attrs
+name, attr, value
+default, shape, box
+redbox, color, red
+redbox, shape, box
+
+[edge-styles],,See http://www.graphviz.org/content/attrs
+name, attr, value
+default, color, blue
+dash, style, dashed

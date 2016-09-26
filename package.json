@@ -23,10 +23,12 @@
   },
   "dependencies": {
     "csv-parse": "^1.1.7",
+    "lodash": "^4.16.2",
     "node-plantuml": "^0.4.4"
   },
   "devDependencies": {
     "@types/csv-parse": "^1.1.4",
+    "@types/lodash": "^4.14.36",
     "typescript": "^2.0.3"
   }
 }
