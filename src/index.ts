@@ -1,37 +1,13 @@
+
 import * as plantuml from 'node-plantuml';
 import * as fs from 'fs';
 import * as csvparse from 'csv-parse';
 import * as assert from 'assert';
 import * as _ from 'lodash';
-import * as yargs from 'yargs';
 import * as path from 'path';
 
-const argv = yargs
-    .usage('$0 [options] <csv-file>')
-    .option('s', {
-        alias: 'export-source',
-        describe: 'Export plantuml source',
-        type: 'boolean',
-        default: false
-    })
-    .option('example', {
-        describe: 'Create an example csv file in current directory',
-        type: 'boolean',
-        global: true,
-        default: false
-    })
-    .version()
-    .help()
-    .demand(1, 1)
-    .argv;
-
-if (argv.example) {
-    fs.createReadStream(path.resolve(__dirname, '../example/example.csv'))
-        .pipe(fs.createWriteStream('example.csv'));
-    process.exit(0);
-}
-
-const input = path.parse(path.resolve(argv._[0]));
+let input: path.ParsedPath;
+let exportSrc = false;
 
 const nodes: string[][] = [];
 const dependencies: string[][] = [];
@@ -82,7 +58,7 @@ rankdir=LR`;
 }
 @enddot`;
 
-    if (argv.s) {
+    if (exportSrc) {
         console.log(dot);
     }
 
@@ -133,4 +109,8 @@ parser.on('end', () => {
     generateGraph();
 });
 
-fs.createReadStream(path.resolve(input.dir, input.base)).pipe(parser);
+export function generate(options: any) {
+    input = options.input;
+    exportSrc = options.exportSrc;
+    fs.createReadStream(path.resolve(input.dir, input.base)).pipe(parser);
+}

@@ -1,5 +1,5 @@
 {
-  "name": "depgraph",
+  "name": "digraph-generator",
   "version": "1.0.0",
   "description": "Generate dependency graph from CSV file",
   "keywords": [
@@ -9,6 +9,9 @@
     "graphviz"
   ],
   "main": "dist/index.js",
+  "bin": {
+    "digraph": "dist/cli.js"
+  },
   "author": "Leo Liang",
   "license": "MIT",
   "repository": {

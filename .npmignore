@@ -1,0 +1,6 @@
+# First exclude everything
+*
+
+# Include what we need
+!dist/**
+!example/**
