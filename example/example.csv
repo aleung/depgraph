@@ -2,8 +2,8 @@
 id,style,slogan
 
 root,,Develop depgraph
-1,,Finish source code
-2,,Test
+1,redbox,Finish source code
+2,default,Test
 3,,Commit to GitHub
 4,,Publish to NPM
 
@@ -11,7 +11,7 @@ root,,Develop depgraph
 from, to, style
 
 root, 4
-4, 3
+4, 3, dash
 4, 2
 2, 1
 

@@ -3,36 +3,54 @@ import * as fs from 'fs';
 import * as csvparse from 'csv-parse';
 import * as assert from 'assert';
 import * as _ from 'lodash';
+import * as yargs from 'yargs';
+import * as path from 'path';
 
-// TODO: get from argv
-const input = 'input.csv';
+const argv = yargs
+    .usage('$0 [options] <csv-file>')
+    .option('s', {
+        alias: 'export-source',
+        describe: 'Export plantuml source',
+        type: 'boolean',
+        default: false
+    })
+    .option('example', {
+        describe: 'Create an example csv file in current directory',
+        type: 'boolean',
+        global: true,
+        default: false
+    })
+    .version()
+    .help()
+    .demand(1, 1)
+    .argv;
 
-const nodes: string[] = [];
-const dependencies: string[] = [];
+if (argv.example) {
+    fs.createReadStream(path.resolve(__dirname, '../example/example.csv'))
+        .pipe(fs.createWriteStream('example.csv'));
+    process.exit(0);
+}
+
+const input = path.parse(path.resolve(argv._[0]));
+
+const nodes: string[][] = [];
+const dependencies: string[][] = [];
 const nodeStyles: any = {};
 const edgeStyles: any = {};
 
 function parseItem(record: string[]) {
     assert(record.length >= 2);
-    // TODO: apply style
-    nodes.push(`${record[0].trim()} [label="${record[1].trim()}"]`);
+    nodes.push(record);
 }
 
 function parseDependency(record: string[]) {
     assert(record.length >= 2);
-    // TODO: apply style
-    dependencies.push(`${record[0]} -> ${record[1]}`);
+    dependencies.push(record);
 }
 
-// TODO: partial apply (nodeStyles)
-function parseNodeStyle(record: string[]) {
+function parseStyle(allStyles:any, record: string[]) {
     assert(record.length >= 3);
-    _.merge(nodeStyles, {[record[0].trim()]: {[record[1].trim()]: record[2].trim()}});
-}
-
-function parseEdgeStyle(record: string[]) {
-    assert(record.length >= 3);
-    _.merge(edgeStyles, {[record[0].trim()]: {[record[1].trim()]: record[2].trim()}});
+    _.merge(allStyles, {[record[0].trim()]: {[record[1].trim()]: record[2].trim()}});
 }
 
 function packStyles(styles: any) {
@@ -47,20 +65,29 @@ function generateGraph() {
     let dot = `
 @startdot
 digraph DI {
-rankdir=LR
-    `;
-    dot += nodes.join('\n');
-    dot += dependencies.join('\n');
+rankdir=LR`;
+    dot += '\n';
+    dot += nodes.map((record: string[]) => {
+        const styleName = record[1].trim() || 'default';
+        const style = nodeStyles[styleName] || '';
+        return `${record[0].trim()} [${style} label="${record[2].trim()}"]`;
+    }).join('\n');
+    dot += '\n';
+    dot += dependencies.map((record: string[]) => {
+        const styleName = record[2] || 'default';
+        const style = `[${edgeStyles[styleName.trim()]}]` || '';
+        return `${record[0]} -> ${record[1]} ${style}`;
+    }).join('\n');
     dot += `
 }
-@enddot
-    `;
+@enddot`;
 
-    console.log('Generate output ...');
+    if (argv.s) {
+        console.log(dot);
+    }
 
-    // TODO: configurable
     const generator = plantuml.generate(dot, {format: 'svg'});
-    generator.out.pipe(fs.createWriteStream("output.svg"));
+    generator.out.pipe(fs.createWriteStream(path.resolve(input.dir, input.name + '.svg')));
 }
 
 let sectionBegin = false;
@@ -89,10 +116,10 @@ parser.on('readable', () => {
             parseRecord = parseDependency;
             sectionBegin = true;
         } else if (record[0] === '[node-styles]') {
-            parseRecord = parseNodeStyle;
+            parseRecord = _.partial(parseStyle, nodeStyles);
             sectionBegin = true;
         } else if (record[0] === '[edge-styles]') {
-            parseRecord = parseEdgeStyle;
+            parseRecord = _.partial(parseStyle, edgeStyles);
             sectionBegin = true;
         } else if (sectionBegin) {
             sectionBegin = false;
@@ -106,4 +133,4 @@ parser.on('end', () => {
     generateGraph();
 });
 
-fs.createReadStream(input).pipe(parser);
+fs.createReadStream(path.resolve(input.dir, input.base)).pipe(parser);
