@@ -19,11 +19,16 @@ $ digraph --help
 /usr/local/bin/digraph [options] <csv-file>
 
 Options:
+  --image              Output image format
+                                    [choices: "png", "svg", "eps"] [default: "svg"]
   -s, --export-source  Export plantuml source
   --example            Create an example csv file in current directory
   --version            Show version number
   --help               Show help
 ```
+
+_Known Issue_: Generating png format sometimes got blank or half output.
+It might be a bug inside underlay library used by digraph.
 
 ## Install
 

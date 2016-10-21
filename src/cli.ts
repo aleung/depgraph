@@ -7,6 +7,12 @@ import {generate} from './index';
 
 const argv = yargs
     .usage('$0 [options] <csv-file>')
+    .option('image', {
+        describe: 'Output image format',
+        type: 'string',
+        choices: ['png', 'svg', 'eps'],
+        default: 'svg'
+    })
     .option('s', {
         alias: 'export-source',
         describe: 'Export plantuml source',
@@ -36,6 +42,7 @@ if (argv.example) {
 
     generate({
         input: path.parse(path.resolve(argv._[0])),
+        format: argv.image,
         exportSrc: argv.s
     });
 }

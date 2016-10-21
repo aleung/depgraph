@@ -8,6 +8,7 @@ import * as path from 'path';
 
 let input: path.ParsedPath;
 let exportSrc = false;
+let format = 'svg';
 
 const nodes: string[][] = [];
 const dependencies: string[][] = [];
@@ -62,8 +63,8 @@ rankdir=LR`;
         console.log(dot);
     }
 
-    const generator = plantuml.generate(dot, {format: 'svg'});
-    generator.out.pipe(fs.createWriteStream(path.resolve(input.dir, input.name + '.svg')));
+    const generator = plantuml.generate(dot, {format});
+    generator.out.pipe(fs.createWriteStream(path.resolve(input.dir, input.name + '.' + format)));
 }
 
 let sectionBegin = false;
@@ -112,5 +113,6 @@ parser.on('end', () => {
 export function generate(options: any) {
     input = options.input;
     exportSrc = options.exportSrc;
+    format = options.format;
     fs.createReadStream(path.resolve(input.dir, input.base)).pipe(parser);
 }

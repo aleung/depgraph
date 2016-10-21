@@ -1,6 +1,6 @@
 {
   "name": "digraph-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate dependency graph from CSV file",
   "keywords": [
     "dependency",
@@ -24,13 +24,13 @@
   "dependencies": {
     "csv-parse": "^1.1.7",
     "lodash": "^4.16.2",
-    "node-plantuml": "^0.4.4",
-    "yargs": "^5.0.0"
+    "node-plantuml": "0.5.0",
+    "yargs": "^6.3.0"
   },
   "devDependencies": {
     "@types/csv-parse": "^1.1.4",
     "@types/lodash": "^4.14.36",
-    "@types/yargs": "0.0.31",
+    "@types/yargs": "0.0.33",
     "typescript": "^2.0.3"
   }
 }
